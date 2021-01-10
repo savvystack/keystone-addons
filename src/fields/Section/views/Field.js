@@ -7,9 +7,18 @@ import { FlexGroup } from "@arch-ui/layout";
 import { IconButton } from "@arch-ui/button";
 import { ChevronDownIcon, ChevronUpIcon } from "@primer/octicons-react";
 
-const SectionHeader = ({ field, value, errors, onChange }) => {
+const SectionHeader = ({ field, errors }) => {
   const ref = useRef(null);
   const [isCollapsed, setCollapsed] = useState(false);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!initialized) {
+      setTimeout(() => toggleCollapse(true), 100);
+      setInitialized(true);
+    }
+  });
+
   const toggleCollapse = () => {
     const thisContainer = ref.current.parentElement;
     const fields = thisContainer.parentElement.querySelectorAll("div[data-selector='field-container']");
@@ -27,7 +36,6 @@ const SectionHeader = ({ field, value, errors, onChange }) => {
     fieldsInSection.forEach((f) => {
       f.style.display = isCollapsed ? "block" : "none";
     });
-
     setCollapsed(!isCollapsed);
   };
 
