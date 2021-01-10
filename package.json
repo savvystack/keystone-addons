@@ -1,0 +1,38 @@
+{
+  "name": "@savvystack/keystone-multi-input-field",
+  "version": "0.1.0",
+  "description": "A KeystoneJS custom field that allows multiple sub-items and multiple sub-fields",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/savvystack/keystone-multi-input-field.git"
+  },
+  "keywords": [
+    "keystone",
+    "keystonejs",
+    "custom field",
+    "multiple"
+  ],
+  "author": "Raymond Jia <raymond@savvystack.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/savvystack/keystone-multi-input-field/issues"
+  },
+  "homepage": "https://github.com/savvystack/keystone-multi-input-field#readme",
+  "dependencies": {
+    "@arch-ui/button": "^0.0.22",
+    "@arch-ui/fields": "^3.0.5",
+    "@arch-ui/input": "^0.1.11",
+    "@arch-ui/layout": "^0.2.14",
+    "@arch-ui/theme": "^0.0.11",
+    "@emotion/core": "^11.0.0",
+    "@keystonejs/fields": "^21.0.0",
+    "@primer/octicons-react": "^11.2.0",
+    "decamelize": "^4.0.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  }
+}
