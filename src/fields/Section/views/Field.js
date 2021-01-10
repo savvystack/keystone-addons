@@ -42,7 +42,9 @@ const SectionHeader = ({ field, value, errors, onChange }) => {
               lineHeight: 1.5,
               fontWeight: 700,
               padding: 0,
+              cursor: "pointer",
             }}
+            onClick={toggleCollapse}
           />
           <FieldDescription text={field.adminDoc} css={{ marginBottom: 0 }} />
         </div>
