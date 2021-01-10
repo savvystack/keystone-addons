@@ -33,10 +33,7 @@ const SectionHeader = ({ field, value, errors, onChange }) => {
 
   return (
     <FieldContainer data-field-type="section">
-      <FlexGroup>
-        <div css={{ height: "100%", display: "inline-flex" }}>
-          <IconButton variant="subtle" appearance="default" spacing="cramped" icon={isCollapsed ? ChevronUpIcon : ChevronDownIcon} css={{ fontSize: "80%" }} onClick={toggleCollapse}></IconButton>
-        </div>
+      <FlexGroup growIndexes={[0]}>
         <div>
           <FieldLabel
             field={field}
@@ -48,6 +45,9 @@ const SectionHeader = ({ field, value, errors, onChange }) => {
             }}
           />
           <FieldDescription text={field.adminDoc} css={{ marginBottom: 0 }} />
+        </div>
+        <div css={{ height: "100%", display: "inline-flex" }}>
+          <IconButton variant="subtle" appearance="default" spacing="cramped" icon={isCollapsed ? ChevronUpIcon : ChevronDownIcon} css={{ fontSize: "80%" }} onClick={toggleCollapse}></IconButton>
         </div>
       </FlexGroup>
       <hr
