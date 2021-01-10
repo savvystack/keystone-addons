@@ -1,6 +1,8 @@
-# keystone-multi-input-field
+# Keystone Addons
 
-![Image of Yaktocat](docs/screenshot1.png)
+## MultiInput custom field
+
+![Image of Yaktocat](docs/multiinput-screenshot.png)
 
 Allow one Keystone field to hold multiple values. The underlying field is a Text field. 
 
@@ -8,10 +10,12 @@ The values are stringified into a JSON before saving, and deserialized before di
 
 If `defaultValue` is provided, it must have the same number of elements as `options`.
 
+
+
 ## Example
 
 ```javascript
-const MultiInput = require("@savvystack/keystone-multi-input-field");
+const MultiInput = require("./keystone-addons/src/fields/MultiInput");
 
 keystone.createList("Sample", {
   fields: {
@@ -25,6 +29,18 @@ keystone.createList("Sample", {
 });
 
 ```
+
+## Installation
+
+```
+cd <your project>
+git submodule add https://github.com/savvystack/keystone-addons
+```
+
+Note: I had some trouble building an NPM package out of this project. Keystone's unique approach of mixing
+ client-side code with server-side code makes the bundler's job complicated. I have yet to dive deep
+enough into Keystone's bundler logic (`field-views-loader.js`) to figure out why.
+
 
 ## Credit
 Based on the `MultiCheck` custom field sample in [KeystoneJS](https://www.keystonejs.com).
