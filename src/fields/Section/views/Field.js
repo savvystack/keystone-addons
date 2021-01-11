@@ -50,9 +50,9 @@ const SectionHeader = ({ field, errors }) => {
               lineHeight: 1.5,
               fontWeight: 700,
               padding: 0,
-              cursor: "pointer",
+              cursor: field.config.collapsible ? "pointer" : "default",
             }}
-            onClick={toggleCollapse}
+            onClick={field.config.collapsible ? toggleCollapse : undefined}
           />
           <FieldDescription text={field.adminDoc} css={{ marginBottom: 0 }} />
         </div>
