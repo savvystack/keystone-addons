@@ -13,7 +13,7 @@ Collapsible Section header:
 ## Props
 
 | Name | Type | Required | Description |
-| --- | --- |
+| --- | --- | --- | --- |
 | `collapsible` | Boolean | No | Whether this section is collapsible. |
 
 

@@ -12,7 +12,7 @@ If `defaultValue` is provided, it must have the same number of elements as `opti
 ## Props
 
 | Name | Type | Required | Description |
-| --- | --- |
+| --- | --- | --- | --- |
 | `options`       | Array of strings | Yes | Each option will create a subfield. The option string will be *decamelized* and used as the field label. It's also used as the key in the serialized JSON data. |
 | `defaultValue`  | Array of primitives | No | Provide default values to each subfield. |
 
