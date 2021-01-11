@@ -10,6 +10,13 @@ Collapsible Section header:
 
 `Section` is based on the built-in `Virtual` field type. They won't show up in the database schema. However, you'll find them in the GraphQL schema, which you can safely ignore.
 
+## Props
+
+| Name | Type | Required | Description |
+| --- | --- |
+| `collapsible` | Boolean | No | Whether this section is collapsible. |
+
+
 ## Example
 
 ```javascript

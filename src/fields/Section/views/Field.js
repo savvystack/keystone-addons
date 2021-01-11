@@ -13,8 +13,8 @@ const SectionHeader = ({ field, errors }) => {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (!initialized) {
-      setTimeout(() => toggleCollapse(true), 100);
+    if (!initialized && field.config.collapsible) {
+      setTimeout(() => toggleCollapse(), 100);
       setInitialized(true);
     }
   });
@@ -57,7 +57,15 @@ const SectionHeader = ({ field, errors }) => {
           <FieldDescription text={field.adminDoc} css={{ marginBottom: 0 }} />
         </div>
         <div css={{ height: "100%", display: "inline-flex" }}>
-          <IconButton variant="subtle" appearance="default" spacing="cramped" icon={isCollapsed ? ChevronUpIcon : ChevronDownIcon} css={{ fontSize: "80%" }} onClick={toggleCollapse}></IconButton>
+          <IconButton
+            variant="subtle"
+            appearance="default"
+            spacing="cramped"
+            isDisabled={!field.config.collapsible}
+            icon={isCollapsed ? ChevronUpIcon : ChevronDownIcon}
+            css={{ fontSize: "80%" }}
+            onClick={toggleCollapse}
+          ></IconButton>
         </div>
       </FlexGroup>
       <hr
