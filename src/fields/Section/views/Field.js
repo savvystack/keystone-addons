@@ -20,14 +20,16 @@ const SectionHeader = ({ field, errors }) => {
   });
 
   const toggleCollapse = () => {
-    const thisContainer = ref.current.parentElement;
+    const thisContainer = ref.current.closest("div[data-field-type='section']");
     const fields = thisContainer.parentElement.querySelectorAll("div[data-selector='field-container']");
     const fieldsInSection = [];
     let inSection = false;
     for (let i = 0; i < fields.length; i++) {
       const f = fields[i];
-      if (f === thisContainer) inSection = true;
-      else if (f.getAttribute("data-field-type") === "section") {
+      const fieldType = "" + f.getAttribute("data-field-type");
+      if (f === thisContainer) {
+        inSection = true;
+      } else if (fieldType === "section" || fieldType === "spacer") {
         if (inSection) break;
       } else {
         if (inSection) fieldsInSection.push(f);
@@ -40,9 +42,9 @@ const SectionHeader = ({ field, errors }) => {
   };
 
   return (
-    <FieldContainer data-field-type="section">
+    <FieldContainer data-field-type="section" css={{ marginBottom: 10 }}>
       <FlexGroup growIndexes={[0]}>
-        <div>
+        <div ref={ref}>
           <FieldLabel
             field={field}
             errors={errors}
@@ -68,13 +70,6 @@ const SectionHeader = ({ field, errors }) => {
           ></IconButton>
         </div>
       </FlexGroup>
-      <hr
-        ref={ref}
-        css={{
-          borderBottom: "none",
-          borderColor: "rgba(193,199,208,0.5)",
-        }}
-      ></hr>
     </FieldContainer>
   );
 };
