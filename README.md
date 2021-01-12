@@ -5,6 +5,7 @@ Some useful add-ons to the wonderful [KeystoneJS](https://www.keystonejs.com).
 ## Custom fields
 * [MultiInput](./docs/multiinput.md): a composite field that allows multiple subitems and subfields.
 * [Section](./docs/section.md): a collapsible section header that divide a long form into multiple sections.
+* [Spacer](./docs/spacer.md): a visual break in the form panel.
 
 ## Installation
 
