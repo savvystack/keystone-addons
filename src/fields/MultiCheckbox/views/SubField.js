@@ -7,11 +7,15 @@ import decamelize from "decamelize";
 import { capitalize } from "../util";
 
 export const SubField = ({ htmlId, label, value, onChange }) => {
-  const inputValue = value || "";
+  const checked = value || false;
   const displayLabel = capitalize(decamelize(label, " "));
+  const handleChange = (event) => {
+    onChange({ [label]: event.target.checked });
+  };
+
   return (
     <div css={{ display: "flex", flexDirection: "row", alignItems: "center", marginRight: "0.5rem" }}>
-      <CheckboxPrimitive autoFocus={false} checked={!!value} onChange={(event) => onChange({ [label]: event.target.value })} id={htmlId} />
+      <CheckboxPrimitive autoFocus={false} checked={!!value} onChange={handleChange} id={htmlId} />
       <FieldLabel field={{ label: displayLabel, config: { isRequired: false } }} css={{ paddingBottom: "2px" }} />
     </div>
   );
