@@ -8,7 +8,7 @@ import { SubField } from "./SubField";
 import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from "@primer/octicons-react";
 import { Lozenge } from "@arch-ui/lozenge";
 import { colors, gridSize } from "@arch-ui/theme";
-import { IconButton } from "@arch-ui/button";
+import { slugify } from "../util";
 
 const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
   let initialState, defaultValue;
@@ -24,6 +24,7 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
   };
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");
+  const uniqueKey = (field, label) => slugify(`ks-multicheckbox-${field.label}-${label}`);
 
   return (
     <FieldContainer>
@@ -45,7 +46,7 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
       <FieldDescription text={field.adminDoc} />
       <FlexGroup>
         {field.config.options.map((label) => (
-          <SubField key={`ks-multiinput-${field.label}-${label}`} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} />
+          <SubField key={uniqueKey(field, label)} htmlId={uniqueKey(field, label)} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} />
         ))}
       </FlexGroup>
     </FieldContainer>

@@ -4,11 +4,7 @@ import { jsx } from "@emotion/core";
 import { FieldContainer, FieldLabel, FieldInput } from "@arch-ui/fields";
 import { Input } from "@arch-ui/input";
 import decamelize from "decamelize";
-
-const capitalize = (s) => {
-  if (typeof s !== "string") return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
+import { capitalize } from "../util";
 
 export const SubField = ({ htmlId, label, value, onChange }) => {
   const inputValue = value || "";

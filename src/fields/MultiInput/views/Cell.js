@@ -1,11 +1,9 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import decamelize from "decamelize";
+import { capitalize, slugify } from "../util";
 
-const capitalize = (s) => {
-  if (typeof s !== "string") return "";
-  return s.charAt(0).toUpperCase() + s.slice(1);
-};
+const uniqueKey = (field, index) => slugify(`ks-multiinput-cell-${field.label}-${index}`);
 
 export default function MultiInputCell({ data, field }) {
   if (data === null) {
@@ -22,7 +20,7 @@ export default function MultiInputCell({ data, field }) {
       });
       return (
         <p
-          key={`ks-multiinput-cell-${field.label}-${index}`}
+          key={uniqueKey(field, index)}
           css={{
             marginBlockStart: "0.2em",
             marginBlockEnd: "0.2em",
@@ -37,7 +35,7 @@ export default function MultiInputCell({ data, field }) {
       const displayLabel = capitalize(decamelize(label, " "));
       return (
         <p
-          key={`ks-multiinput-cell-${field.label}-${i}`}
+          key={uniqueKey(field, i)}
           css={{
             marginBlockStart: "0.2em",
             marginBlockEnd: "0.2em",

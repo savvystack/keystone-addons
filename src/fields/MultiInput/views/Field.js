@@ -9,6 +9,7 @@ import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from "@primer/octicons-react"
 import { Lozenge } from "@arch-ui/lozenge";
 import { colors, gridSize } from "@arch-ui/theme";
 import { IconButton } from "@arch-ui/button";
+import { slugify } from "../util";
 
 const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   let initialState, defaultValue;
@@ -45,6 +46,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   };
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");
+  const uniqueKey = (field, index, label = "") => slugify(`ks-multiinput-${field.label}-${index}-${label}`);
 
   return (
     <FieldContainer>
@@ -67,14 +69,14 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
       {field.config.multi ? (
         <>
           {values.map((subitem, index) => (
-            <FlexGroup key={`ks-multiinput-${field.label}-${index}`}>
+            <FlexGroup key={uniqueKey(field, index)}>
               <div css={{ height: "100%", display: "inline-flex" }}>
                 <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(index)}></IconButton>
               </div>
               {field.config.options.map((sublabel) => (
                 <SubField
-                  key={`ks-multiinput-${field.label}-${index}-${sublabel}`}
-                  htmlId={`ks-multiinput-${field.label}-${index}-${sublabel}`}
+                  key={uniqueKey(field, index, sublabel)}
+                  htmlId={uniqueKey(field, index, sublabel)}
                   autoFocus={autoFocus}
                   value={subitem[sublabel]}
                   label={sublabel}
@@ -90,7 +92,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
       ) : (
         <FlexGroup>
           {field.config.options.map((label) => (
-            <SubField key={`ks-multiinput-${field.label}-${label}`} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} />
+            <SubField key={uniqueKey(field, 0, label)} htmlId={uniqueKey(field, 0, label)} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} />
           ))}
         </FlexGroup>
       )}
