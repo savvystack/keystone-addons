@@ -50,6 +50,7 @@ const SectionHeader = ({ field, errors }) => {
             errors={errors}
             css={{
               lineHeight: 1.5,
+              fontSize: "100%",
               fontWeight: 700,
               padding: 0,
               cursor: field.config.collapsible ? "pointer" : "default",
