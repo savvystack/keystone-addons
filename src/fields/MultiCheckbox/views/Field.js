@@ -20,6 +20,14 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
   }, [values]);
 
   const handleChange = (newValue) => {
+    if (!field.config.multi) {
+      // only one True value is allowed
+      // newValue is an object like { [label]: boolean }
+      // if the newValue is true, set all other values to false
+      if (Object.values(newValue).length > 0 && Object.values(newValue)[0]) {
+        Object.keys(values).forEach((key) => (values[key] = false));
+      }
+    }
     setValues({ ...values, ...newValue });
   };
 

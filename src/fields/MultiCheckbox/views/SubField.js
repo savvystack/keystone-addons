@@ -16,7 +16,7 @@ export const SubField = ({ htmlId, label, value, onChange }) => {
   return (
     <div css={{ display: "flex", flexDirection: "row", alignItems: "center", marginRight: "0.5rem" }}>
       <CheckboxPrimitive autoFocus={false} checked={!!value} onChange={handleChange} id={htmlId} />
-      <FieldLabel field={{ label: displayLabel, config: { isRequired: false } }} css={{ paddingBottom: "2px" }} />
+      <FieldLabel htmlFor={htmlId} field={{ label: displayLabel, config: { isRequired: false } }} css={{ paddingBottom: "2px" }} />
     </div>
   );
 };

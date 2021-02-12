@@ -6,10 +6,12 @@ const { parseDefaultValues } = require("./util");
 // JSON.stringify feels good enough for this simple field.
 
 class MultiCheckbox extends Text.implementation {
-  constructor(path, { options }) {
+  constructor(path, { options, multi }) {
     super(...arguments);
     if (!Array.isArray(options)) options = ["Yes", "No"];
     this.options = options;
+    this.multi = !!multi; // normalize the input to a strict boolean
+    this.isOrderable = false;
   }
 
   extendAdminMeta(meta) {
@@ -17,7 +19,7 @@ class MultiCheckbox extends Text.implementation {
     // Add options to adminMeta
     // disable sorting as we don't know how this should be sorted
 
-    return { ...meta, options: this.options };
+    return { ...meta, options: this.options, multi: this.multi, isOrderable: false };
   }
 
   gqlQueryInputFields() {
