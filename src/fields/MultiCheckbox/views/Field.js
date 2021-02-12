@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FieldContainer, FieldDescription } from "@arch-ui/fields";
 import { FlexGroup } from "@arch-ui/layout";
 import { SubField } from "./SubField";
@@ -15,9 +15,49 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
   initialState = value ? value : field.config.defaultValue;
   const [values, setValues] = useState(initialState);
 
+  const ref = useRef(null);
+
   useEffect(() => {
     onChange(values);
   }, [values]);
+
+  const handleReaction = (actions, values) => {
+    const formElement = ref.current.closest("form");
+
+    const findInputByFieldName = (fieldName) => formElement.querySelector(`[id$="-${fieldName}"]`); // match element with ID ends with '-fieldName'
+    const findFieldByName = (fieldName) => {
+      const inputElement = findInputByFieldName(fieldName);
+      if (inputElement) return inputElement.closest(`[data-selector="field-container"]`);
+    };
+
+    const hideField = (fieldName) => {
+      const fieldContainer = findFieldByName(fieldName);
+      if (fieldContainer) fieldContainer.style.display = "none";
+    };
+
+    const showField = (fieldName) => {
+      const fieldContainer = findFieldByName(fieldName);
+      if (fieldContainer) fieldContainer.style.display = "block";
+    };
+
+    const clearField = (fieldName) => {
+      const inputElement = findInputByFieldName(fieldName);
+      inputElement.value = "";
+    };
+
+    const setFieldValue = (fieldName, value) => {
+      const inputElement = findInputByFieldName(fieldName);
+      inputElement.value = value;
+    };
+
+    Object.entries(values).forEach(([key, value]) => {
+      const actionKey = `${key}_${value}`;
+      const script = actions[actionKey];
+      if (script) {
+        new Function("hide, show, clear, set", `${script}`)(hideField, showField, clearField, setFieldValue);
+      }
+    });
+  };
 
   const handleChange = (newValue) => {
     if (!field.config.multi) {
@@ -28,7 +68,10 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
         Object.keys(values).forEach((key) => (values[key] = false));
       }
     }
-    setValues({ ...values, ...newValue });
+    const updatedValues = { ...values, ...newValue };
+    setValues(updatedValues);
+
+    if (field.config.reaction) handleReaction(field.config.reaction, updatedValues);
   };
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");
@@ -37,6 +80,7 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
   return (
     <FieldContainer>
       <div
+        ref={ref}
         css={{
           color: colors.N60,
           fontSize: "0.9rem",
