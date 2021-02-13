@@ -19,25 +19,32 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
 
   useEffect(() => {
     onChange(values);
+    handleReaction(field.config.reaction, values);
   }, [values]);
 
   const handleReaction = (actions, values) => {
     const formElement = ref.current.closest("form");
 
-    const findInputByFieldName = (fieldName) => formElement.querySelector(`[id$="-${fieldName}"]`); // match element with ID ends with '-fieldName'
+    const findInputByFieldName = (fieldName) => formElement.querySelector(`[id*="-${fieldName}"]`); // match element with ID that contains '-fieldName'
     const findFieldByName = (fieldName) => {
       const inputElement = findInputByFieldName(fieldName);
       if (inputElement) return inputElement.closest(`[data-selector="field-container"]`);
     };
 
     const hideField = (fieldName) => {
-      const fieldContainer = findFieldByName(fieldName);
-      if (fieldContainer) fieldContainer.style.display = "none";
+      const f = findFieldByName(fieldName);
+      if (f) {
+        f.setAttribute("data-hidden-by-logic", "true");
+        f.style.display = "none";
+      }
     };
 
     const showField = (fieldName) => {
-      const fieldContainer = findFieldByName(fieldName);
-      if (fieldContainer) fieldContainer.style.display = "block";
+      const f = findFieldByName(fieldName);
+      if (f) {
+        f.removeAttribute("data-hidden-by-logic");
+        if (!f.getAttribute("data-hidden-by-section")) f.style.display = "block";
+      }
     };
 
     const clearField = (fieldName) => {
@@ -49,6 +56,8 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
       const inputElement = findInputByFieldName(fieldName);
       inputElement.value = value;
     };
+
+    if (!actions) return;
 
     Object.entries(values).forEach(([key, value]) => {
       const actionKey = `${key}_${value}`;
@@ -70,8 +79,6 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
     }
     const updatedValues = { ...values, ...newValue };
     setValues(updatedValues);
-
-    if (field.config.reaction) handleReaction(field.config.reaction, updatedValues);
   };
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");

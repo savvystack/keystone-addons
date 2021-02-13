@@ -8,7 +8,7 @@ const { parseDefaultValues } = require("./util");
 class MultiCheckbox extends Text.implementation {
   constructor(path, { options, multi, reaction }) {
     super(...arguments);
-    if (!Array.isArray(options)) options = ["Yes", "No"];
+    if (!Array.isArray(options)) options = ["yes", "no"];
     this.options = options;
     this.multi = !!multi; // normalize the input to a strict boolean
     this.reaction = reaction;
