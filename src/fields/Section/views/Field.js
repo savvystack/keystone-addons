@@ -10,14 +10,12 @@ import { ChevronDownIcon, ChevronUpIcon } from "@primer/octicons-react";
 const SectionHeader = ({ field, errors }) => {
   const ref = useRef(null);
   const [isCollapsed, setCollapsed] = useState(false);
-  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (!initialized && field.config.collapsible) {
-      setTimeout(() => toggleCollapse(), 100);
-      setInitialized(true);
+    if (field.config.collapsible) {
+      toggleCollapse();
     }
-  });
+  }, []);
 
   const toggleCollapse = () => {
     const thisContainer = ref.current.closest("div[data-field-type='section']");
@@ -36,7 +34,14 @@ const SectionHeader = ({ field, errors }) => {
       }
     }
     fieldsInSection.forEach((f) => {
-      f.style.display = isCollapsed ? "block" : "none";
+      if (isCollapsed) {
+        // reveal if the field is not hidden for other reasons
+        if (!f.getAttribute("data-hidden-by-logic")) f.style.display = "block";
+        f.removeAttribute("data-hidden-by-section");
+      } else {
+        f.style.display = "none";
+        f.setAttribute("data-hidden-by-section", true);
+      }
     });
     setCollapsed(!isCollapsed);
   };
