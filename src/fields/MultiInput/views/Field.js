@@ -46,7 +46,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   };
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");
-  const uniqueKey = (field, index, label = "") => slugify(`ks-multiinput-${field.label}-${index}-${label}`);
+  const uniqueKey = (field, index, label = "") => slugify(`ks-multiinput-${field.path}-${index}-${label}`);
 
   return (
     <FieldContainer>

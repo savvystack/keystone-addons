@@ -10,13 +10,11 @@ export const SubField = ({ htmlId, label, value, onChange }) => {
   const inputValue = value || "";
   const displayLabel = capitalize(decamelize(label, " "));
   return (
-    <div css={{ display: "flex", alignItems: "center" }}>
-      <FieldContainer css={{ marginBottom: 12 }}>
-        <FieldLabel field={{ label: displayLabel, config: { isRequired: false } }} css={{ fontSize: "80%", paddingBottom: "4px" }} />
-        <FieldInput>
-          <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [label]: event.target.value })} id={htmlId} />
-        </FieldInput>
-      </FieldContainer>
+    <div css={{ marginBottom: 12 }}>
+      <FieldLabel field={{ label: displayLabel, config: { isRequired: false } }} css={{ fontSize: "80%", paddingBottom: "4px" }} />
+      <FieldInput>
+        <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [label]: event.target.value })} id={htmlId} />
+      </FieldInput>
     </div>
   );
 };
