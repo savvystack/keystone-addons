@@ -42,12 +42,15 @@ const useAccess = (listDef, directives) => {
       // ["fieldA", "fieldB"]
       directive.forEach((fieldName) => applyAccessPolicyToField(fieldName, policy));
     } else if (typeof directive === "object") {
+      let fieldsToExclude = [];
+
+      if (Array.isArray(directive.except)) fieldsToExclude = directive.except;
       // { except: ["fieldA", "fieldB"]}
-      const fieldsToExclude = directive.except || [];
+      else if (typeof directive.except === "string") fieldsToExclude = [directive.except];
+      // { except: "fieldA" }
+
       Object.keys(listDef.fields).forEach((fieldName) => {
-        if (!fieldsToExclude.includes(fieldName)) {
-          applyAccessPolicyToField(fieldName, policy);
-        }
+        if (!fieldsToExclude.includes(fieldName)) applyAccessPolicyToField(fieldName, policy);
       });
     }
   };
