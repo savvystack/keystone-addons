@@ -1,11 +1,12 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
+import { css, keyframes } from "@emotion/react";
 import React, { useState, useEffect, useRef } from "react";
 import { FieldContainer, FieldDescription } from "@arch-ui/fields";
 import { FlexGroup } from "@arch-ui/layout";
 import { SubField } from "./SubField";
-import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from "@primer/octicons-react";
+import { ShieldIcon } from "@primer/octicons-react";
 import { Lozenge } from "@arch-ui/lozenge";
 import { colors, gridSize } from "@arch-ui/theme";
 import { slugify } from "../util";
@@ -14,6 +15,22 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
   let initialState, defaultValue;
   initialState = value ? value : field.config.defaultValue;
   const [values, setValues] = useState(initialState);
+
+  const fadingHighlight = keyframes`
+    0% {
+      background-color: rgba(255, 255, 0, 0.3);
+    }
+    50% {
+      background-color: rgba(255, 255, 0, 0.3);
+    }
+    100% {
+      background-color: rgba(255, 255, 0, 0);
+    }
+  `;
+
+  const fadeAnim = css`
+    animation: ${fadingHighlight} 1s ease;
+  `;
 
   const ref = useRef(null);
 
@@ -41,9 +58,13 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
 
     const showField = (fieldName) => {
       const f = findFieldByName(fieldName);
-      if (f) {
+      if (f && f.style.display === "none") {
         f.removeAttribute("data-hidden-by-logic");
-        if (!f.getAttribute("data-hidden-by-section")) f.style.display = "block";
+        if (!f.getAttribute("data-hidden-by-section")) {
+          f.style.display = "block";
+          f.style.animation = `${fadeAnim.next.name} 1s ease`;
+          // react generate a random name for animation, we want to use it directly
+        }
       }
     };
 
@@ -105,7 +126,8 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
       <FieldDescription text={field.adminDoc} />
       <FlexGroup>
         {field.config.options.map((label) => (
-          <SubField key={uniqueKey(field, label)} htmlId={uniqueKey(field, label)} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} />
+          <SubField key={uniqueKey(field, label)} htmlId={uniqueKey(field, label)} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} css={fadeAnim} />
+          // the reference to `fadeAnim` is dummy, it has no effect on SubField
         ))}
       </FlexGroup>
     </FieldContainer>
