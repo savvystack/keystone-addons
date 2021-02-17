@@ -7,6 +7,9 @@ Some useful add-ons to the wonderful [KeystoneJS](https://www.keystonejs.com).
 * [Section](./docs/section.md): a collapsible section header that divide a long form into multiple sections.
 * [Spacer](./docs/spacer.md): a visual break in the form panel.
 
+## Custom actions
+* [Download Items](./docs/download-items.md): allow the user to download selected items in a list to a CSV file.
+
 ## Installation
 
 ```
