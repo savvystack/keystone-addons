@@ -27,15 +27,12 @@ const DownloadItems = () => {
     setSelectedItems([]);
   };
 
-  console.log(selectedItems);
-  console.log(columns);
-
   return (
     <Fragment>
       <IconButton appearance="default" icon={DownloadIcon} onClick={() => setDownloadModal(true)} variant="nuance" id="list-page-csv-download-button">
         Download
       </IconButton>
-      <DownloadItemsModal isOpen={downloadModalIsVisible} list={list} allItems={items} selectedItems={selectedItems} onClose={onClose} onDownload={onDownload} />
+      <DownloadItemsModal isOpen={downloadModalIsVisible} list={list} allItems={items} selectedItems={selectedItems} columns={columns} onClose={onClose} onDownload={onDownload} />
     </Fragment>
   );
 };
