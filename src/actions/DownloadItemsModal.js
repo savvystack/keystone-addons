@@ -25,7 +25,7 @@ const saveCsvAsFile = (csv, filename) => {
 
 const encodeCsvValue = (v) => {
   if (typeof v === "undefined" || v === null) return "";
-  if (typeof v === "number") return v.toString();
+  if (typeof v === "number" || typeof v === "boolean") return v.toString();
   if (v instanceof Date) return v.toISOString();
   v = v.replace(/"/g, '""');
   if (v.search(/("|,|\n)/g) >= 0) return '"' + v + '"';
