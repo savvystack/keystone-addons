@@ -1,5 +1,3 @@
-const { listenerCount } = require("bunyan");
-
 const CreateOnly = {
   access: {
     read: true,
