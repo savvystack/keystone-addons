@@ -31,12 +31,6 @@ const capitalize = (s) => {
 const constructSubfields = (options) => {
   // convert an array of option to an object of subfields, using option value as key, and deriving the display label from the option
   const subfields = options.reduce((prev, next) => ({ ...prev, [next]: { label: capitalize(decamelize(next, " ")) } }), {});
-  // options.forEach((option) => {
-  //   subfields[option] = {
-  //     label: capitalize(decamelize(option, " ")),
-  //   };
-  // });
-  console.log(subfields);
   return subfields;
 };
 

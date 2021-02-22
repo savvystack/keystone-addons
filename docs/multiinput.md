@@ -34,7 +34,7 @@ keystone.createList("Sample", {
     withSubfields: { type: MultiInput, subfields: { 
       firstName: { label: "First Name", groupLabel: "Full Name" },
       lasttName: { label: "Last Name" },
-      street: { label: "Number and Street", groupLabel: "Address" },
+      street: { label: "Number and Street", grow: true, groupLabel: "Address" },
       city: { label: "City or Town" },
       state: { label: "State or Province" },
       postalCode: { label: "Postal Code" },
