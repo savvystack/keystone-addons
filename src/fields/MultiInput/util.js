@@ -1,15 +1,15 @@
 const decamelize = require("decamelize");
 
 const parseDefaultValues = (defaultValue, subfields) => {
-  if (defaultValue && subfields && defaultValue.length === subfields.length) {
+  if (Array.isArray(defaultValue) && defaultValue.length === subfields.length) {
     // Merge the subfields and defaultValue values into an object
-    // { subfield1: false, subfield2: false }
-    defaultValue = Object.keys(subfields).reduce((prev, next, i) => ({ ...prev, [next]: defaultValue[i] }), {});
-  } else {
-    // { subfield1: null, subfield2: null }
-    defaultValue = Object.keys(subfields).reduce((prev, next) => ({ ...prev, [next]: null }), {});
+    // { subfield0: defaultValue[0], subfield1: defaultValue[1] }
+    return Object.keys(subfields).reduce((prev, next, i) => ({ ...prev, [next]: defaultValue[i] }), {});
   }
-  return defaultValue;
+
+  const allNullDefaults = Object.keys(subfields).reduce((prev, next) => ({ ...prev, [next]: null }), {});
+  if (defaultValue && typeof defaultValue === "object") return { ...allNullDefaults, ...defaultValue };
+  else return allNullDefaults;
 };
 
 const slugify = (text) => {
