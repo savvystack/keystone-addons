@@ -11,6 +11,15 @@ import { colors, gridSize } from "@arch-ui/theme";
 import { IconButton } from "@arch-ui/button";
 import { slugify } from "../util";
 
+/* convert the single dimensional list of subfields into groups, each contains a subset of subfields. The output looks like this:
+[
+  {
+    label: "a group label", // can be an empty string, but won't be null or undefined
+    items: [ { path: "subfieldPath", label: "a subfield label"} ],
+    growIndexes: [ 0 ], // the item with index appearing here will be allowed to grow when rendered on the page
+  }
+]
+*/
 const breakSubfields = (subfields) => {
   const groups = [];
   let currentGroupLabel;
@@ -33,7 +42,6 @@ const breakSubfields = (subfields) => {
   });
 
   groups.push({ label: currentGroupLabel, items: currentGroupItems, growIndexes: currentGroupGrowIndexes });
-  console.log(groups);
   return groups;
 };
 
@@ -96,18 +104,18 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
       <FieldDescription text={field.adminDoc} />
       {field.config.repeatable ? (
         <>
-          {values.map((subitem, index) => (
-            <FlexGroup key={uniqueKey(field, index)}>
+          {values.map((subitem, subItemIndex) => (
+            <FlexGroup key={uniqueKey(field, subItemIndex)}>
               <div>
-                <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(index)}></IconButton>
+                <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(subItemIndex)}></IconButton>
               </div>
               <div>
-                {subfieldGroups.map((group) => (
-                  <div>
+                {subfieldGroups.map((group, groupIndex) => (
+                  <div key={uniqueKey(field, subItemIndex, groupIndex)}>
                     {group.label ? <div css={{ color: colors.N60, fontSize: "0.9rem", fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div> : <></>}
                     <FlexGroup growIndexes={group.growIndexes}>
                       {group.items.map(({ path, label }) => (
-                        <SubField key={uniqueKey(field, index, label)} htmlId={uniqueKey(field, index, label)} path={path} value={subitem[path]} label={label} onChange={handleSubItemChange(index)} />
+                        <SubField htmlId={uniqueKey(field, subItemIndex, label)} path={path} value={subitem[path]} label={label} onChange={handleSubItemChange(subItemIndex)} />
                       ))}
                     </FlexGroup>
                   </div>
@@ -123,8 +131,8 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
         </>
       ) : (
         <>
-          {subfieldGroups.map((group) => (
-            <div>
+          {subfieldGroups.map((group, groupIndex) => (
+            <div key={uniqueKey(field, 0, groupIndex)}>
               {group.label ? <div css={{ color: colors.N60, fontSize: "0.9rem", fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div> : <></>}
               <FlexGroup growIndexes={group.growIndexes}>
                 {group.items.map(({ path, label }) => (
