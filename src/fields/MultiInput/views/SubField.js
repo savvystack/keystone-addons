@@ -1,19 +1,16 @@
 /** @jsx jsx */
 
 import { jsx } from "@emotion/core";
-import { FieldContainer, FieldLabel, FieldInput } from "@arch-ui/fields";
+import { FieldLabel, FieldInput } from "@arch-ui/fields";
 import { Input } from "@arch-ui/input";
-import decamelize from "decamelize";
-import { capitalize } from "../util";
 
-export const SubField = ({ htmlId, label, value, onChange }) => {
+export const SubField = ({ htmlId, path, label, value, onChange }) => {
   const inputValue = value || "";
-  const displayLabel = capitalize(decamelize(label, " "));
   return (
     <div css={{ marginBottom: 12 }}>
-      <FieldLabel field={{ label: displayLabel, config: { isRequired: false } }} css={{ fontSize: "80%", paddingBottom: "4px" }} />
+      <FieldLabel field={{ label, config: { isRequired: false } }} css={{ fontSize: "80%", paddingBottom: "4px", whiteSpace: "nowrap" }} />
       <FieldInput>
-        <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [label]: event.target.value })} id={htmlId} />
+        <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [path]: event.target.value })} id={htmlId} />
       </FieldInput>
     </div>
   );

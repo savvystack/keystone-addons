@@ -3,7 +3,7 @@ import { parseDefaultValues } from "../util";
 
 class MultiInputController extends FieldController {
   constructor(config, ...args) {
-    const defaultValue = parseDefaultValues(config.defaultValue, config.options);
+    const defaultValue = parseDefaultValues(config.defaultValue, config.subfields);
     super({ ...config, defaultValue }, ...args);
   }
 

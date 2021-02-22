@@ -11,13 +11,36 @@ import { colors, gridSize } from "@arch-ui/theme";
 import { IconButton } from "@arch-ui/button";
 import { slugify } from "../util";
 
+const breakSubfields = (subfields) => {
+  const groups = [];
+  let currentGroupLabel;
+  let currentGroupItems = [];
+  Object.entries(subfields).forEach(([path, subfield]) => {
+    const combinedSubfield = { path, ...subfield };
+    if (subfield.groupLabel !== undefined) {
+      // empty string is ok
+      if (currentGroupItems.length > 0) {
+        groups.push({ label: currentGroupLabel, items: currentGroupItems });
+      }
+      currentGroupLabel = subfield.groupLabel;
+      currentGroupItems = [combinedSubfield];
+    } else {
+      currentGroupItems.push(combinedSubfield);
+    }
+  });
+
+  groups.push({ label: currentGroupLabel, items: currentGroupItems });
+  console.log(groups);
+  return groups;
+};
+
 const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   let initialState, defaultValue;
-  if (field.config.multi) {
+  if (field.config.repeatable) {
     defaultValue = field.getDefaultValue();
     if (value && Array.isArray(value)) initialState = value;
     else initialState = [];
-    // under multi mode, values is an array of subitems, each is in turn an array of values
+    // under repeatable mode, values is an array of subitems, each is in turn an array of values
   } else {
     initialState = value ? value : field.config.defaultValue;
     // this comes from the Keystone sample code, but it doesn't work as supposed.
@@ -48,6 +71,8 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");
   const uniqueKey = (field, index, label = "") => slugify(`ks-multiinput-${field.path}-${index}-${label}`);
 
+  const subfieldGroups = breakSubfields(field.config.subfields);
+
   return (
     <FieldContainer>
       <div
@@ -66,35 +91,46 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
       {accessError ? <ShieldIcon title={accessError.message} css={{ color: colors.N20, marginRight: "1em" }} /> : null}
       {field.isRequired ? <Lozenge appearance="primary"> Required </Lozenge> : null}
       <FieldDescription text={field.adminDoc} />
-      {field.config.multi ? (
+      {field.config.repeatable ? (
         <>
           {values.map((subitem, index) => (
             <FlexGroup key={uniqueKey(field, index)}>
-              <div css={{ height: "100%", display: "inline-flex" }}>
-                <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(index)}></IconButton>
+              <div css={{}}>
+                <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(index)} css={{ minWidth: "2em" }}></IconButton>
               </div>
-              {field.config.options.map((sublabel) => (
-                <SubField
-                  key={uniqueKey(field, index, sublabel)}
-                  htmlId={uniqueKey(field, index, sublabel)}
-                  autoFocus={autoFocus}
-                  value={subitem[sublabel]}
-                  label={sublabel}
-                  onChange={handleSubItemChange(index)}
-                />
-              ))}
+              <div>
+                {subfieldGroups.map((group) => (
+                  <div>
+                    {group.label ? <div css={{ color: colors.N60, fontSize: "0.9rem", fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div> : <></>}
+                    <FlexGroup>
+                      {group.items.map(({ path, label }) => (
+                        <SubField key={uniqueKey(field, index, label)} htmlId={uniqueKey(field, index, label)} path={path} value={subitem[path]} label={label} onChange={handleSubItemChange(index)} />
+                      ))}
+                    </FlexGroup>
+                  </div>
+                ))}
+              </div>
             </FlexGroup>
           ))}
           <div css={{ height: "100%", display: "inline-flex" }}>
-            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: "80%" }} onClick={handleAddSubItem}></IconButton>
+            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: "80%" }} onClick={handleAddSubItem}>
+              Add Item
+            </IconButton>
           </div>
         </>
       ) : (
-        <FlexGroup>
-          {field.config.options.map((label) => (
-            <SubField key={uniqueKey(field, 0, label)} htmlId={uniqueKey(field, 0, label)} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} />
+        <>
+          {subfieldGroups.map((group) => (
+            <div>
+              {group.label ? <div css={{ color: colors.N60, fontSize: "0.9rem", fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div> : <></>}
+              <FlexGroup>
+                {group.items.map(({ path, label }) => (
+                  <SubField key={uniqueKey(field, 0, label)} htmlId={uniqueKey(field, 0, label)} path={path} value={values[path]} label={label} onChange={handleChange} />
+                ))}
+              </FlexGroup>
+            </div>
           ))}
-        </FlexGroup>
+        </>
       )}
     </FieldContainer>
   );
