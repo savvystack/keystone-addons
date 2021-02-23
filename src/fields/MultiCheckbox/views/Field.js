@@ -11,7 +11,7 @@ import { Lozenge } from "@arch-ui/lozenge";
 import { colors, gridSize } from "@arch-ui/theme";
 import { slugify } from "../util";
 
-const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
+const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   let initialState, defaultValue;
   initialState = value ? value : field.config.defaultValue;
   const [values, setValues] = useState(initialState);
@@ -125,8 +125,8 @@ const MultiCheckboxField = ({ onChange, autoFocus, field, value, errors }) => {
       {field.isRequired ? <Lozenge appearance="primary"> Required </Lozenge> : null}
       <FieldDescription text={field.adminDoc} />
       <FlexGroup>
-        {field.config.options.map((label) => (
-          <SubField key={uniqueKey(field, label)} htmlId={uniqueKey(field, label)} autoFocus={autoFocus} value={values[label]} label={label} onChange={handleChange} css={fadeAnim} />
+        {field.config.options.map((option, index) => (
+          <SubField key={uniqueKey(field, index)} htmlId={uniqueKey(field, index)} index={index} value={values[index]} label={option} onChange={handleChange} css={fadeAnim} />
           // the reference to `fadeAnim` is dummy, it has no effect on SubField
         ))}
       </FlexGroup>

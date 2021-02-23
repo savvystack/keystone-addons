@@ -8,7 +8,7 @@ const { parseDefaultValues } = require("./util");
 class MultiCheckbox extends Text.implementation {
   constructor(path, { options, multi, reaction }) {
     super(...arguments);
-    if (!Array.isArray(options)) options = ["yes", "no"];
+    if (!Array.isArray(options)) options = ["Yes", "No"];
     this.options = options;
     this.multi = !!multi; // normalize the input to a strict boolean
     this.reaction = reaction;
@@ -27,7 +27,7 @@ class MultiCheckbox extends Text.implementation {
     return [
       `${this.path}: String`,
       // Create a graphQL query for each individual option
-      ...this.options.map((option) => `${this.path}_${option}: String`),
+      ...this.options.map((option, index) => `${this.path}_${index + 1}: String`),
     ];
   }
 

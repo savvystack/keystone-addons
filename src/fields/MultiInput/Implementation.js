@@ -48,7 +48,6 @@ class MultiInput extends Text.implementation {
         result = this.defaultValue;
       }
     }
-    console.log(result);
     return JSON.stringify(parseDefaultValues(result, this.subfields));
   }
 }

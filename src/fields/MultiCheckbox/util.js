@@ -2,11 +2,11 @@ module.exports = {
   parseDefaultValues: (defaultValue, options) => {
     if (defaultValue && options && defaultValue.length === options.length) {
       // Merge the options and defaultValue values into an object
-      // { option1: false, option2: false }
-      defaultValue = options.reduce((prev, next, i) => ({ ...prev, [next]: defaultValue[i] }), {});
+      // { 0: false, 1: false }
+      defaultValue = options.reduce((prev, next, i) => ({ ...prev, [i]: defaultValue[i] }), {});
     } else {
-      // { option1: null, option2: null }
-      defaultValue = options.reduce((prev, next) => ({ ...prev, [next]: null }), {});
+      // { 0: null, 1: null }
+      defaultValue = options.reduce((prev, next, i) => ({ ...prev, [i]: null }), {});
     }
     return defaultValue;
   },
