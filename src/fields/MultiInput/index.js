@@ -17,4 +17,8 @@ module.exports = {
     mongoose: MongoIntegerInterface,
     knex: KnexIntegerInterface,
   },
+  get: (field, subfieldName) => {
+    if (!field) return undefined;
+    return JSON.parse(field)[subfieldName];
+  },
 };
