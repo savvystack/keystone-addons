@@ -46,12 +46,10 @@ const breakSubfields = (subfields) => {
 }
 
 const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
-  console.log(value)
   let fieldValue, defaultValue
   if (field.config.repeatable) {
     // for repeatable subfields, the defaultValue is appied to each subitem newly added
     defaultValue = field.getDefaultValue()
-    console.log(`repeatable defaultValue: ${JSON.stringify(defaultValue)}`)
     if (value && Array.isArray(value)) fieldValue = value
     else fieldValue = []
     // under repeatable mode, values is an array of subitems, each is in turn an array of values

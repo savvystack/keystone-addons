@@ -81,15 +81,16 @@ const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   }
 
   const handleChange = (newValue) => {
+    const copyOfValue = { ...value }
     if (!field.config.multi) {
       // only one True value is allowed
       // newValue is an object like { [label]: boolean }
       // if the newValue is true, set all other values to false
       if (Object.values(newValue).length > 0 && Object.values(newValue)[0]) {
-        Object.keys(value).forEach((key) => (value[key] = false))
+        Object.keys(copyOfValue).forEach((key) => (copyOfValue[key] = false))
       }
     }
-    value = { ...value, ...newValue }
+    value = { ...copyOfValue, ...newValue }
     onChange(value)
     handleReaction(field.config.reaction, value)
   }
