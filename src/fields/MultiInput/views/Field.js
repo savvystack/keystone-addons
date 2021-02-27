@@ -1,15 +1,15 @@
 /** @jsx jsx */
 
-import { jsx } from "@emotion/core";
-import React, { useState, useEffect } from "react";
-import { FieldContainer, FieldDescription } from "@arch-ui/fields";
-import { FlexGroup } from "@arch-ui/layout";
-import { SubField } from "./SubField";
-import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from "@primer/octicons-react";
-import { Lozenge } from "@arch-ui/lozenge";
-import { colors, gridSize } from "@arch-ui/theme";
-import { IconButton } from "@arch-ui/button";
-import { slugify } from "../util";
+import { jsx } from '@emotion/core'
+import React, { useState, useEffect } from 'react'
+import { FieldContainer, FieldDescription } from '@arch-ui/fields'
+import { FlexGroup } from '@arch-ui/layout'
+import { SubField } from './SubField'
+import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from '@primer/octicons-react'
+import { Lozenge } from '@arch-ui/lozenge'
+import { colors, gridSize } from '@arch-ui/theme'
+import { IconButton } from '@arch-ui/button'
+import { slugify } from '../util'
 
 /* convert the single dimensional list of subfields into groups, each contains a subset of subfields. The output looks like this:
 [
@@ -21,90 +21,91 @@ import { slugify } from "../util";
 ]
 */
 const breakSubfields = (subfields) => {
-  const groups = [];
-  let currentGroupLabel;
-  let currentGroupItems = [];
-  let currentGroupGrowIndexes = [];
+  const groups = []
+  let currentGroupLabel
+  let currentGroupItems = []
+  let currentGroupGrowIndexes = []
   Object.entries(subfields).forEach(([path, subfield]) => {
-    const combinedSubfield = { path, ...subfield };
+    const combinedSubfield = { path, ...subfield }
     if (subfield.groupLabel !== undefined) {
       // empty string is ok
       if (currentGroupItems.length > 0) {
-        groups.push({ label: currentGroupLabel, items: currentGroupItems, growIndexes: currentGroupGrowIndexes });
+        groups.push({ label: currentGroupLabel, items: currentGroupItems, growIndexes: currentGroupGrowIndexes })
       }
-      currentGroupLabel = subfield.groupLabel;
-      currentGroupItems = [combinedSubfield];
-      currentGroupGrowIndexes = subfield.grow ? [0] : [];
+      currentGroupLabel = subfield.groupLabel
+      currentGroupItems = [combinedSubfield]
+      currentGroupGrowIndexes = subfield.grow ? [0] : []
     } else {
-      if (subfield.grow) currentGroupGrowIndexes.push(currentGroupItems.length);
-      currentGroupItems.push(combinedSubfield);
+      if (subfield.grow) currentGroupGrowIndexes.push(currentGroupItems.length)
+      currentGroupItems.push(combinedSubfield)
     }
-  });
+  })
 
-  groups.push({ label: currentGroupLabel, items: currentGroupItems, growIndexes: currentGroupGrowIndexes });
-  return groups;
-};
+  groups.push({ label: currentGroupLabel, items: currentGroupItems, growIndexes: currentGroupGrowIndexes })
+  return groups
+}
 
 const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
-  let initialState, defaultValue;
+  console.log(value)
+  let fieldValue, defaultValue
   if (field.config.repeatable) {
-    defaultValue = field.getDefaultValue();
-    if (value && Array.isArray(value)) initialState = value;
-    else initialState = [];
+    // for repeatable subfields, the defaultValue is appied to each subitem newly added
+    defaultValue = field.getDefaultValue()
+    console.log(`repeatable defaultValue: ${JSON.stringify(defaultValue)}`)
+    if (value && Array.isArray(value)) fieldValue = value
+    else fieldValue = []
     // under repeatable mode, values is an array of subitems, each is in turn an array of values
   } else {
-    initialState = value ? value : field.config.defaultValue;
-    // this comes from the Keystone sample code, but it doesn't work as supposed.
-    // field.config.defaultValue is undefined, and value is already set to the defaultValue
+    // for non-repeable subfields, `defaultValue` has already been merged into `value`
+    fieldValue = value
   }
-  const [values, setValues] = useState(initialState);
-
-  useEffect(() => {
-    onChange(values);
-  }, [values]);
 
   const handleChange = (newValue) => {
-    setValues({ ...values, ...newValue });
-  };
+    fieldValue = { ...fieldValue, ...newValue }
+    onChange(fieldValue)
+  }
 
   const handleSubItemChange = (index) => (newValue) => {
-    setValues([...values.slice(0, index), { ...values[index], ...newValue }, ...values.slice(index + 1)]);
-  };
+    fieldValue = [...fieldValue.slice(0, index), { ...fieldValue[index], ...newValue }, ...fieldValue.slice(index + 1)]
+    onChange(fieldValue)
+  }
 
   const handleAddSubItem = () => {
-    setValues([...values, defaultValue]);
-  };
+    fieldValue = [...fieldValue, defaultValue]
+    onChange(fieldValue)
+  }
 
   const handleRemoveSubItem = (index) => () => {
-    setValues([...values.slice(0, index), ...values.slice(index + 1)]);
-  };
+    fieldValue = [...fieldValue.slice(0, index), ...fieldValue.slice(index + 1)]
+    onChange(fieldValue)
+  }
 
-  const accessError = (errors || []).find((error) => error instanceof Error && error.name === "AccessDeniedError");
-  const uniqueKey = (field, index, label = "") => slugify(`ks-multiinput-${field.path}-${index}-${label}`);
+  const accessError = (errors || []).find((error) => error instanceof Error && error.name === 'AccessDeniedError')
+  const uniqueKey = (field, index, label = '') => slugify(`ks-multiinput-${field.path}-${index}-${label}`)
 
-  const subfieldGroups = breakSubfields(field.config.subfields);
+  const subfieldGroups = breakSubfields(field.config.subfields)
 
   return (
     <FieldContainer>
       <div
         css={{
           color: colors.N60,
-          fontSize: "0.9rem",
+          fontSize: '0.9rem',
           fontWeight: 500,
           paddingBottom: gridSize,
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
         }}
       >
         {field.label}
       </div>
-      {accessError ? <ShieldIcon title={accessError.message} css={{ color: colors.N20, marginRight: "1em" }} /> : null}
+      {accessError ? <ShieldIcon title={accessError.message} css={{ color: colors.N20, marginRight: '1em' }} /> : null}
       {field.isRequired ? <Lozenge appearance="primary"> Required </Lozenge> : null}
       <FieldDescription text={field.adminDoc} />
       {field.config.repeatable ? (
         <>
-          {values.map((subitem, subItemIndex) => (
+          {fieldValue.map((subitem, subItemIndex) => (
             <FlexGroup key={uniqueKey(field, subItemIndex)}>
               <div>
                 <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(subItemIndex)}></IconButton>
@@ -112,10 +113,17 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
               <div>
                 {subfieldGroups.map((group, groupIndex) => (
                   <div key={uniqueKey(field, subItemIndex, groupIndex)}>
-                    {group.label ? <div css={{ color: colors.N60, fontSize: "0.9rem", fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div> : <></>}
+                    {group.label && <div css={{ color: colors.N60, fontSize: '0.9rem', fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div>}
                     <FlexGroup growIndexes={group.growIndexes}>
                       {group.items.map(({ path, label }) => (
-                        <SubField htmlId={uniqueKey(field, subItemIndex, label)} path={path} value={subitem[path]} label={label} onChange={handleSubItemChange(subItemIndex)} />
+                        <SubField
+                          key={uniqueKey(field, subItemIndex, label)}
+                          htmlId={uniqueKey(field, subItemIndex, label)}
+                          path={path}
+                          value={subitem[path]}
+                          label={label}
+                          onChange={handleSubItemChange(subItemIndex)}
+                        />
                       ))}
                     </FlexGroup>
                   </div>
@@ -123,8 +131,8 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
               </div>
             </FlexGroup>
           ))}
-          <div css={{ height: "100%", display: "inline-flex" }}>
-            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: "80%" }} onClick={handleAddSubItem}>
+          <div css={{ height: '100%', display: 'inline-flex' }}>
+            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: '80%' }} onClick={handleAddSubItem}>
               Add Item
             </IconButton>
           </div>
@@ -133,10 +141,10 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
         <>
           {subfieldGroups.map((group, groupIndex) => (
             <div key={uniqueKey(field, 0, groupIndex)}>
-              {group.label ? <div css={{ color: colors.N60, fontSize: "0.9rem", fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div> : <></>}
+              {group.label && <div css={{ color: colors.N60, fontSize: '0.9rem', fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div>}
               <FlexGroup growIndexes={group.growIndexes}>
                 {group.items.map(({ path, label }) => (
-                  <SubField key={uniqueKey(field, 0, label)} htmlId={uniqueKey(field, 0, label)} path={path} value={values[path]} label={label} onChange={handleChange} />
+                  <SubField key={uniqueKey(field, 0, label)} htmlId={uniqueKey(field, 0, label)} path={path} value={fieldValue[path]} label={label} onChange={handleChange} />
                 ))}
               </FlexGroup>
             </div>
@@ -144,7 +152,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
         </>
       )}
     </FieldContainer>
-  );
-};
+  )
+}
 
-export default MultiInputField;
+export default MultiInputField
