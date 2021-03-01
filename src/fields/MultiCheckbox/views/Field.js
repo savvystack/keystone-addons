@@ -40,33 +40,49 @@ const MultiCheckboxField = ({ onChange, field, value, errors }) => {
     }
 
     const hideField = (fieldName) => {
-      const f = findFieldByName(fieldName)
-      if (f) {
-        f.setAttribute('data-hidden-by-logic', 'true')
-        f.style.display = 'none'
-      }
+      const fields = fieldName.split(',').map((n) => n.trim())
+      fields.forEach((field) => {
+        if (field === '') return
+        const f = findFieldByName(field)
+        if (f) {
+          f.setAttribute('data-hidden-by-logic', 'true')
+          f.style.display = 'none'
+        }
+      })
     }
 
     const showField = (fieldName) => {
-      const f = findFieldByName(fieldName)
-      if (f && f.style.display === 'none') {
-        f.removeAttribute('data-hidden-by-logic')
-        if (!f.getAttribute('data-hidden-by-section')) {
-          f.style.display = 'block'
-          f.style.animation = `${fadeAnim.next.name} 1s ease`
-          // react generate a random name for animation, we want to use it directly
+      const fields = fieldName.split(',').map((n) => n.trim())
+      fields.forEach((field) => {
+        if (field === '') return
+        const f = findFieldByName(field)
+        if (f && f.style.display === 'none') {
+          f.removeAttribute('data-hidden-by-logic')
+          if (!f.getAttribute('data-hidden-by-section')) {
+            f.style.display = 'block'
+            f.style.animation = `${fadeAnim.next.name} 1s ease`
+            // react generate a random name for animation, we want to use it directly
+          }
         }
-      }
+      })
     }
 
     const clearField = (fieldName) => {
-      const inputElement = findInputByFieldName(fieldName)
-      inputElement.value = ''
+      const fields = fieldName.split(',').map((n) => n.trim())
+      fields.forEach((field) => {
+        if (field === '') return
+        const inputElement = findInputByFieldName(field)
+        inputElement.value = ''
+      })
     }
 
     const setFieldValue = (fieldName, value) => {
-      const inputElement = findInputByFieldName(fieldName)
-      inputElement.value = value
+      const fields = fieldName.split(',').map((n) => n.trim())
+      fields.forEach((field) => {
+        if (field === '') return
+        const inputElement = findInputByFieldName(field)
+        inputElement.value = value
+      })
     }
 
     if (!actions) return
@@ -96,7 +112,7 @@ const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   }
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === 'AccessDeniedError')
-  const uniqueKey = (field, label) => slugify(`ks-multicheckbox-${field.label}-${label}`)
+  const uniqueKey = (field, label) => slugify(`ks-multicheckbox-${field.path}-${label}`)
 
   return (
     <FieldContainer>
