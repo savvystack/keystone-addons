@@ -25,9 +25,10 @@ const expandOptions = (options) => {
 
 const findOption = (value, options) => options.find((i) => i.value === value)
 
-export const SubField = ({ htmlId, path, label, value, options, onChange }) => {
+export const SubField = ({ htmlId, path, label, value, options, isDisabled, onChange }) => {
   const inputValue = value || ''
   const expandedOptions = expandOptions(options)
+  console.log(`isDisabled=${isDisabled} ${typeof isDisabled}`)
   return (
     <div css={{ marginBottom: 12 }}>
       <FieldLabel field={{ label, config: { isRequired: false } }} css={{ fontSize: '80%', paddingBottom: '4px', whiteSpace: 'nowrap' }} />
@@ -39,10 +40,11 @@ export const SubField = ({ htmlId, path, label, value, options, onChange }) => {
             options={expandedOptions}
             onChange={(option) => onChange({ [path]: option ? option.value : null })}
             isClearable
-            isDisabled={false}
+            isDisabled={isDisabled}
+            id={htmlId}
           />
         ) : (
-          <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [path]: event.target.value })} id={htmlId} />
+          <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [path]: event.target.value })} disabled={isDisabled} id={htmlId} />
         )}
       </FieldInput>
     </div>
