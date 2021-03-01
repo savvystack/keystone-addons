@@ -59,6 +59,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   }
 
   const handleChange = (newValue) => {
+    console.log(newValue)
     fieldValue = { ...fieldValue, ...newValue }
     onChange(fieldValue)
   }
@@ -113,13 +114,14 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
                   <div key={uniqueKey(field, subItemIndex, groupIndex)}>
                     {group.label && <div css={{ color: colors.N60, fontSize: '0.9rem', fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div>}
                     <FlexGroup growIndexes={group.growIndexes}>
-                      {group.items.map(({ path, label }) => (
+                      {group.items.map(({ path, label, options }) => (
                         <SubField
                           key={uniqueKey(field, subItemIndex, path)}
                           htmlId={uniqueKey(field, subItemIndex, path)}
                           path={path}
                           value={subitem[path]}
                           label={label}
+                          options={options}
                           onChange={handleSubItemChange(subItemIndex)}
                         />
                       ))}
@@ -141,8 +143,8 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
             <div key={uniqueKey(field, 0, groupIndex)}>
               {group.label && <div css={{ color: colors.N60, fontSize: '0.9rem', fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div>}
               <FlexGroup growIndexes={group.growIndexes}>
-                {group.items.map(({ path, label }) => (
-                  <SubField key={uniqueKey(field, 0, path)} htmlId={uniqueKey(field, 0, path)} path={path} value={fieldValue[path]} label={label} onChange={handleChange} />
+                {group.items.map(({ path, label, options }) => (
+                  <SubField key={uniqueKey(field, 0, path)} htmlId={uniqueKey(field, 0, path)} path={path} value={fieldValue[path]} label={label} options={options} onChange={handleChange} />
                 ))}
               </FlexGroup>
             </div>
