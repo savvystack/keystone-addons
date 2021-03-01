@@ -79,7 +79,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   }
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === 'AccessDeniedError')
-  const uniqueKey = (field, index, label = '') => slugify(`ks-multiinput-${field.path}-${index}-${label}`)
+  const uniqueKey = (field, index, subfield = '') => slugify(`ks-multiinput-${field.path}-${index}-${subfield}`)
 
   const subfieldGroups = breakSubfields(field.config.subfields)
 
@@ -115,8 +115,8 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
                     <FlexGroup growIndexes={group.growIndexes}>
                       {group.items.map(({ path, label }) => (
                         <SubField
-                          key={uniqueKey(field, subItemIndex, label)}
-                          htmlId={uniqueKey(field, subItemIndex, label)}
+                          key={uniqueKey(field, subItemIndex, path)}
+                          htmlId={uniqueKey(field, subItemIndex, path)}
                           path={path}
                           value={subitem[path]}
                           label={label}
@@ -142,7 +142,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
               {group.label && <div css={{ color: colors.N60, fontSize: '0.9rem', fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div>}
               <FlexGroup growIndexes={group.growIndexes}>
                 {group.items.map(({ path, label }) => (
-                  <SubField key={uniqueKey(field, 0, label)} htmlId={uniqueKey(field, 0, label)} path={path} value={fieldValue[path]} label={label} onChange={handleChange} />
+                  <SubField key={uniqueKey(field, 0, path)} htmlId={uniqueKey(field, 0, path)} path={path} value={fieldValue[path]} label={label} onChange={handleChange} />
                 ))}
               </FlexGroup>
             </div>
