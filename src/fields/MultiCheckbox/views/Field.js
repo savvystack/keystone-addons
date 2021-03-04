@@ -9,7 +9,6 @@ import { SubField } from './SubField'
 import { ShieldIcon } from '@primer/octicons-react'
 import { Lozenge } from '@arch-ui/lozenge'
 import { colors, gridSize } from '@arch-ui/theme'
-import { slugify } from '../util'
 
 const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   const fadingHighlight = keyframes`
@@ -112,7 +111,7 @@ const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   }
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === 'AccessDeniedError')
-  const uniqueKey = (field, label) => slugify(`ks-multicheckbox-${field.path}-${label}`)
+  const uniqueKey = (field, label) => `ks-multicheckbox-${field.path}-${label}`
 
   return (
     <FieldContainer>

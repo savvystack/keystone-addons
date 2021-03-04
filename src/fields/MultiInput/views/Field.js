@@ -9,7 +9,6 @@ import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from '@primer/octicons-react'
 import { Lozenge } from '@arch-ui/lozenge'
 import { colors, gridSize } from '@arch-ui/theme'
 import { IconButton } from '@arch-ui/button'
-import { slugify } from '../util'
 
 /* convert the single dimensional list of subfields into groups, each contains a subset of subfields. The output looks like this:
 [
@@ -59,7 +58,6 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   }
 
   const handleChange = (newValue) => {
-    console.log(newValue)
     fieldValue = { ...fieldValue, ...newValue }
     onChange(fieldValue)
   }
@@ -80,7 +78,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
   }
 
   const accessError = (errors || []).find((error) => error instanceof Error && error.name === 'AccessDeniedError')
-  const uniqueKey = (field, index, subfield = '') => slugify(`ks-multiinput-${field.path}-${index}-${subfield}`)
+  const uniqueKey = (field, index, subfield = '') => `ks-multiinput-${field.path}-${index}-${subfield}`
 
   const subfieldGroups = breakSubfields(field.config.subfields)
 
