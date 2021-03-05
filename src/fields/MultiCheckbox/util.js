@@ -1,29 +1,30 @@
 module.exports = {
-  parseDefaultValues: (defaultValue, options) => {
-    if (defaultValue && options && defaultValue.length === options.length) {
-      // Merge the options and defaultValue values into an object
-      // { 0: false, 1: false }
-      defaultValue = options.reduce((prev, next, i) => ({ ...prev, [i]: defaultValue[i] }), {});
-    } else {
-      // { 0: null, 1: null }
-      defaultValue = options.reduce((prev, next, i) => ({ ...prev, [i]: null }), {});
+  // combine options and defaultValue into a `value` object
+  // options is an array of objects, with `value` and `label` props
+  // defaultValue can be a simple value, or an array of simple values (only valid if config.exclusive == false)
+  makeInitialValue: (defaultValue, options) => {
+    console.log(`parseDefaultValues:`)
+    console.log(defaultValue)
+    console.log(options)
+    return {
+      options,
+      selected: defaultValue,
     }
-    return defaultValue;
   },
 
   slugify: (text) => {
     return text
       .toString()
       .toLowerCase()
-      .replace(/\s+/g, "-") // Replace spaces with -
-      .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-      .replace(/\-\-+/g, "-") // Replace multiple - with single -
-      .replace(/^-+/, "") // Trim - from start of text
-      .replace(/-+$/, ""); // Trim - from end of text
+      .replace(/\s+/g, '-') // Replace spaces with -
+      .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+      .replace(/\-\-+/g, '-') // Replace multiple - with single -
+      .replace(/^-+/, '') // Trim - from start of text
+      .replace(/-+$/, '') // Trim - from end of text
   },
 
   capitalize: (s) => {
-    if (typeof s !== "string") return "";
-    return s.charAt(0).toUpperCase() + s.slice(1);
+    if (typeof s !== 'string') return ''
+    return s.charAt(0).toUpperCase() + s.slice(1)
   },
-};
+}
