@@ -5,19 +5,31 @@ import { capitalize } from '../util'
 
 const uniqueKey = (field, index) => `ks-multiinput-cell-${field.path}-${index}`
 
+const subitemsToArrayOfLabelColonValue = (subitems) => {
+  const pairs = []
+  Object.entries(subitems).forEach(([label, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      if (typeof value === 'object') {
+        if (value.options && value.selected !== undefined && value.selected !== null) {
+          // this subfield is a select, map the selected value to its matching display label
+          const selectedOption = value.options.find((option) => option.value === value.selected)
+          value = selectedOption ? selectedOption.label : ''
+        } else value = ''
+      }
+      const displayLabel = capitalize(decamelize(label, ' '))
+      pairs.push(`${displayLabel}: ${value}`)
+    }
+  })
+  return pairs
+}
+
 export default function MultiInputCell({ data, field }) {
   if (data === null) {
     data = field.getDefaultValue()
   }
   if (Array.isArray(data)) {
     return data.map((subitem, index) => {
-      const values = []
-      Object.entries(subitem).forEach(([label, value]) => {
-        if (value !== undefined && value !== null && value !== '') {
-          const displayLabel = capitalize(decamelize(label, ' '))
-          values.push(`${displayLabel}: ${value}`)
-        }
-      })
+      const labelColonValues = subitemsToArrayOfLabelColonValue(subitem)
       return (
         <p
           key={uniqueKey(field, index)}
@@ -26,24 +38,22 @@ export default function MultiInputCell({ data, field }) {
             marginBlockEnd: '0.2em',
           }}
         >
-          {values.join(', ')}
+          {labelColonValues.join(', ')}
         </p>
       )
     })
   } else {
-    return Object.keys(data).map((label, i) => {
-      const displayLabel = capitalize(decamelize(label, ' '))
-      return (
-        <p
-          key={uniqueKey(field, i)}
-          css={{
-            marginBlockStart: '0.2em',
-            marginBlockEnd: '0.2em',
-          }}
-        >
-          {displayLabel}: {data[label]}
-        </p>
-      )
-    })
+    const labelColonValues = subitemsToArrayOfLabelColonValue(data)
+    return labelColonValues.map((labelValuePair, index) => (
+      <p
+        key={uniqueKey(field, index)}
+        css={{
+          marginBlockStart: '0.2em',
+          marginBlockEnd: '0.2em',
+        }}
+      >
+        {labelValuePair}
+      </p>
+    ))
   }
 }

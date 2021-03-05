@@ -23,27 +23,37 @@ const expandOptions = (options) => {
   } else return []
 }
 
-const findOption = (value, options) => options.find((i) => i.value === value)
-
 export const SubField = ({ htmlId, path, label, value, options, isDisabled, onChange }) => {
-  const inputValue = value || ''
   const expandedOptions = expandOptions(options)
+  let inputValue = value || ''
+  const selectValue = value ? expandedOptions.find((option) => option.value === value.selected) : undefined
+  // react-select's `value` prop must be an object reference to one of the options
+
+  const onSelectChange = (option) => {
+    if (!option)
+      onChange({
+        [path]: null,
+      })
+    else {
+      onChange({
+        [path]: {
+          options: expandedOptions,
+          selected: option.value,
+        },
+      })
+    }
+  }
+
+  const onInputChange = (event) => onChange({ [path]: event.target.value })
+
   return (
     <div css={{ marginBottom: 12 }}>
       <FieldLabel field={{ label, config: { isRequired: false } }} css={{ fontSize: '80%', paddingBottom: '4px', whiteSpace: 'nowrap' }} />
       <FieldInput>
         {options ? (
-          <Select
-            autoFocus={false}
-            value={findOption(value, expandedOptions) ?? null}
-            options={expandedOptions}
-            onChange={(option) => onChange({ [path]: option ? option.value : null })}
-            isClearable
-            isDisabled={isDisabled}
-            id={htmlId}
-          />
+          <Select autoFocus={false} value={selectValue} options={expandedOptions} onChange={onSelectChange} isClearable isDisabled={isDisabled} id={htmlId} />
         ) : (
-          <Input autoFocus={false} value={inputValue} onChange={(event) => onChange({ [path]: event.target.value })} disabled={isDisabled} id={htmlId} />
+          <Input autoFocus={false} value={inputValue} onChange={onInputChange} disabled={isDisabled} id={htmlId} />
         )}
       </FieldInput>
     </div>

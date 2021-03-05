@@ -3,9 +3,6 @@ module.exports = {
   // options is an array of objects, with `value` and `label` props
   // defaultValue can be a simple value, or an array of simple values (only valid if config.exclusive == false)
   makeInitialValue: (defaultValue, options) => {
-    console.log(`parseDefaultValues:`)
-    console.log(defaultValue)
-    console.log(options)
     return {
       options,
       selected: defaultValue,

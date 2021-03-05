@@ -102,7 +102,6 @@ const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   let selectedSet = field.config.exclusive ? new Set([value.selected]) : new Set(value.selected)
 
   const handleChange = (index, checked) => {
-    console.log(`${index}, ${checked}`)
     if (checked) {
       if (field.config.exclusive) selectedSet.clear()
       selectedSet.add(field.config.options[index].value)
