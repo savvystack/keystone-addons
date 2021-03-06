@@ -7,14 +7,14 @@ import Select from '@arch-ui/select'
 
 const expandOptions = (options) => {
   if (typeof options === 'string') {
-    return options.split(',').map((opt, index) => ({
+    return options.split(',').map((option, index) => ({
       value: index,
-      label: opt.trim(),
+      label: option.trim(),
     }))
   } else if (Array.isArray(options)) {
-    return options.map((opt, index) =>
-      typeof opt === 'object'
-        ? opt
+    return options.map((option, index) =>
+      typeof option === 'object'
+        ? option
         : {
             value: index,
             label: opt,

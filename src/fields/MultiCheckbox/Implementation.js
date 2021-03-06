@@ -7,24 +7,24 @@ const { makeInitialValue, slugify } = require('./util')
 
 const normalizeOptions = (options) => {
   if (typeof options === 'string') {
-    return options.split(',').map((option) => ({
-      value: slugify(option.trim()),
+    return options.split(',').map((option, index) => ({
+      value: index,
       label: option.trim(),
     }))
-  }
-  if (Array.isArray(options)) {
-    return options.map((option, index) => {
-      if (typeof option === 'object' && 'value' in option && 'label' in option) return option
-      return {
-        value: index,
-        label: `${option}`,
-      }
-    })
-  }
-  return [
-    { value: true, label: 'Yes' },
-    { value: false, label: 'No' },
-  ]
+  } else if (Array.isArray(options)) {
+    return options.map((option, index) =>
+      typeof option === 'object' && 'value' in option && 'label' in option
+        ? option
+        : {
+            value: index,
+            label: `${option}`,
+          }
+    )
+  } else
+    return [
+      { value: true, label: 'Yes' },
+      { value: false, label: 'No' },
+    ]
 }
 
 class MultiCheckbox extends Text.implementation {
