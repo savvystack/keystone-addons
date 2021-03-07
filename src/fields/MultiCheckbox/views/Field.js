@@ -100,6 +100,11 @@ const MultiCheckboxField = ({ onChange, field, value, errors }) => {
   // `selected` is a simple value in exclusive mode, an array of values (could be empty) in non-exclusive mode
   let selectedSet = field.config.exclusive ? new Set([value.selected]) : new Set(value.selected)
 
+  useEffect(() => {
+    // give the form a chance to hide/show fields when it is just loaded
+    handleReaction(ref, fadeAnim, field.config.options, field.config.reaction, selectedSet)
+  }, [])
+
   const handleChange = (index, checked) => {
     if (checked) {
       if (field.config.exclusive) selectedSet.clear()
