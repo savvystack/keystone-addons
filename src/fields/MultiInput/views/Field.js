@@ -131,7 +131,7 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
             </FlexGroup>
           ))}
           <div css={{ height: '100%', display: 'inline-flex' }}>
-            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: '80%' }} onClick={handleAddSubItem}>
+            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: '80%' }} onClick={handleAddSubItem} id={uniqueKey(field, 9999, 'addItem')}>
               Add Item
             </IconButton>
           </div>
