@@ -47,23 +47,22 @@ const handleReaction = (ref, fadeAnim, options, reactions, selectedSet) => {
     })
   }
 
-  const clearField = (fieldName) => {
-    const fields = fieldName.split(',').map((n) => n.trim())
-    fields.forEach((field) => {
-      if (field === '') return
-      const inputElement = findInputByFieldName(field)
-      inputElement.value = ''
-    })
-  }
-
   const setFieldValue = (fieldName, value) => {
     const fields = fieldName.split(',').map((n) => n.trim())
     fields.forEach((field) => {
       if (field === '') return
       const inputElement = findInputByFieldName(field)
+      if (!inputElement) return
+      // see https://github.com/ILovePing/ILovePing.github.io/issues/22 for explanation
+      const prevValue = inputElement.value
       inputElement.value = value
+      const tracker = inputElement._valueTracker
+      if (tracker) tracker.setValue(prevValue)
+      inputElement.dispatchEvent(new Event('input', { bubbles: true }))
     })
   }
+
+  const clearField = (fieldName) => setFieldValue(fieldName, '')
 
   if (!reactions) return
 
