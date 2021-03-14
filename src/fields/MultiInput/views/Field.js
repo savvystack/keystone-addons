@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react'
 import { FieldContainer, FieldDescription } from '@arch-ui/fields'
 import { FlexGroup } from '@arch-ui/layout'
 import { SubField } from './SubField'
-import { ShieldIcon, PlusCircleIcon, NoEntryIcon } from '@primer/octicons-react'
+import { ShieldIcon, PlusIcon, XIcon } from '@primer/octicons-react'
 import { Lozenge } from '@arch-ui/lozenge'
 import { colors, gridSize } from '@arch-ui/theme'
 import { IconButton } from '@arch-ui/button'
@@ -67,7 +67,12 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
     onChange(fieldValue)
   }
 
-  const handleAddSubItem = () => {
+  const handlePrependSubItem = () => {
+    fieldValue = [defaultValue, ...fieldValue]
+    onChange(fieldValue)
+  }
+
+  const handleAppendSubItem = () => {
     fieldValue = [...fieldValue, defaultValue]
     onChange(fieldValue)
   }
@@ -102,12 +107,27 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
       <FieldDescription text={field.adminDoc} />
       {field.config.repeatable ? (
         <>
+          {fieldValue.length > 0 && (
+            <div css={{ height: '100%', display: 'inline-flex', marginBottom: '0.25rem' }}>
+              <IconButton
+                variant="subtle"
+                appearance="default"
+                spacing="cramped"
+                icon={PlusIcon}
+                css={{ fontSize: '0.9rem' }}
+                onClick={handlePrependSubItem}
+                id={uniqueKey(field, 0, 'prependItem')}
+              >
+                Add Item
+              </IconButton>
+            </div>
+          )}
           {fieldValue.map((subitem, subItemIndex) => (
-            <FlexGroup key={uniqueKey(field, subItemIndex)}>
+            <FlexGroup key={uniqueKey(field, subItemIndex)} css={{ marginTop: '0.5rem' }}>
               <div>
-                <IconButton variant="subtle" appearance="default" spacing="cramped" icon={NoEntryIcon} onClick={handleRemoveSubItem(subItemIndex)}></IconButton>
+                <IconButton variant="subtle" appearance="default" spacing="cramped" icon={XIcon} onClick={handleRemoveSubItem(subItemIndex)}></IconButton>
               </div>
-              <div>
+              <div css={{ marginTop: '3px' }}>
                 {subfieldGroups.map((group, groupIndex) => (
                   <div key={uniqueKey(field, subItemIndex, groupIndex)}>
                     {group.label && <div css={{ color: colors.N60, fontSize: '0.9rem', fontWeight: 500, paddingBottom: gridSize }}>{group.label}</div>}
@@ -131,7 +151,15 @@ const MultiInputField = ({ onChange, autoFocus, field, value, errors }) => {
             </FlexGroup>
           ))}
           <div css={{ height: '100%', display: 'inline-flex' }}>
-            <IconButton variant="subtle" appearance="default" spacing="cramped" icon={PlusCircleIcon} css={{ fontSize: '80%' }} onClick={handleAddSubItem} id={uniqueKey(field, 9999, 'addItem')}>
+            <IconButton
+              variant="subtle"
+              appearance="default"
+              spacing="cramped"
+              icon={PlusIcon}
+              css={{ fontSize: '0.9rem' }}
+              onClick={handleAppendSubItem}
+              id={uniqueKey(field, 0, 'appendItem')}
+            >
               Add Item
             </IconButton>
           </div>
